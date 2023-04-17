@@ -1,34 +1,32 @@
 const { ObjectId } = require("mongodb");
-class LibraryService {
+class UserService {
 	constructor(client) {
-		this.Library = client.db().collection("libraries");
+		this.User = client.db().collection("users");
 	};
-	extractLibraryData(payload) {
-		const library = {
+	extractUserData(payload) {
+		const user = {
 			name: payload.name,
-			text: payload.text,
-			author: payload.author,
-			number : payload.number ,
-			image: payload.image,
-			phar: payload.phar,
-			favorite: payload.favorite,
+			email : payload.email ,
+			address: payload.address,
+			phone : payload.phone ,
+			vip: payload.vip,
 		};
-		Object.keys(library).forEach(
-			(key) => library[key] === undefined && delete library[key]
+		Object.keys(user).forEach(
+			(key) => user[key] === undefined && delete user[key]
 			);
-			return library;
+			return user;
 	}
 	async create(payload) {
-		const library = this.extractLibraryData(payload);
-		const result = await this.Library.findOneAndUpdate(
-			library,
-			{ $set: { favorite: library.favorite === true } },
+		const user = this.extractUserData(payload);
+		const result = await this.User.findOneAndUpdate(
+			user,
+			{ $set: { favorite: user.favorite === true } },
 			{ returnDocument: "after", upsert: true }
 		);
 		return result.value;
 	}
 	async find(filter) {
-		const cursor = await this.Library.find(filter);
+		const cursor = await this.User.find(filter);
 		return await cursor.toArray();
 		}
 		async findByName(name) {
@@ -37,7 +35,7 @@ class LibraryService {
 		});
 	}
 	async findById(id) {
-		return await this.Library.findOne({
+		return await this.User.findOne({
 			_id: ObjectId.isValid(id) ? new ObjectId(id) : null,
 		});
 	}
@@ -45,8 +43,8 @@ class LibraryService {
 		const filter = {
 			_id: ObjectId.isValid(id) ? new ObjectId(id) : null,
 		};
-		const update = this.extractLibraryData(payload);
-		const result = await this.Library.findOneAndUpdate(
+		const update = this.extractUserData(payload);
+		const result = await this.User.findOneAndUpdate(
 			filter,
 			{ $set: update },
 			{ returnDocument: "after" }
@@ -54,7 +52,7 @@ class LibraryService {
 		return result.value;
 	}
 	async delete(id) {
-		const result = await this.Library.findOneAndDelete({
+		const result = await this.User.findOneAndDelete({
 			_id: ObjectId.isValid(id) ? new ObjectId(id) : null,
 		});
 		return result.value;
@@ -63,9 +61,9 @@ class LibraryService {
 		return await this.find({ favorite: true });
 	}
 	async deleteAll() {
-		const result = await this.Library.deleteMany({});
+		const result = await this.User.deleteMany({});
 		return result.deletedCount;
 	}
 	
 }
-module.exports =LibraryService;
+module.exports =UserService;

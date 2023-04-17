@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const librariesRouter = require("./app/routes/library.route");
+const usersRouter = require("./app/routes/user.route")
 
 const ApiError = require("./app/api-error");
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) =>{
 } );
 
 app.use("/api/libraries", librariesRouter);
+app.use("/api/users", usersRouter)
 
 app.use((req, res, next) => {
 	

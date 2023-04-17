@@ -1,5 +1,5 @@
 const ApiError = require("../api-error");
-const LibraryService = require("../services/library.service");
+const UserService = require("../services/user.service");
 const MongoDB = require("../utils/mongodb.util");
 
 exports.create = async (req, res, next) => {
@@ -7,12 +7,12 @@ exports.create = async (req, res, next) => {
 		return next( new ApiError(400, 'Name can not be empty'))
 	}
 	try {
-		const libraryService = new LibraryService(MongoDB.client)
-		const document = await libraryService.create(req.body);
+		const userService = new UserService(MongoDB.client)
+		const document = await userService.create(req.body);
 		return res.send(document);
 	}catch(error) {
 		return next(
-			new ApiError(500, 'An error occurred while creating the library')
+			new ApiError(500, 'An error occurred while creating the user')
 		);
 	}
 } 
@@ -20,12 +20,12 @@ exports.create = async (req, res, next) => {
 exports.findAll = async (req, res, next) => {
 	let documents = [];
 	try {
-		const libraryService = new LibraryService(MongoDB.client);
+		const userService = new UserService(MongoDB.client);
 		const { name } = req.query;
 		if (name) {
-			documents = await libraryService.findByName(name);
+			documents = await userService.findByName(name);
 		}else {
-			documents = await libraryService.find({});
+			documents = await userService.find({});
 		}
 	} catch (error) {
 		return next(
@@ -38,8 +38,8 @@ exports.findAll = async (req, res, next) => {
 
 exports.findOne = async (req, res,next) => {
 	try {
-		const libraryService = new LibraryService(MongoDB.client);
-		const document = await libraryService.findById(req.params.id);
+		const userService = new UserService(MongoDB.client);
+		const document = await userService.findById(req.params.id);
 		if (!document) {
 			return next (new ApiError (404, "Book not found"));
 		}
@@ -60,8 +60,8 @@ exports.update = async (req, res, next) => {
 	}
 		
 	try {
-		const libraryService = new LibraryService(MongoDB.client) ;
-		const document = await libraryService.update(req.params.id, req.body);
+		const userService = new UserService(MongoDB.client) ;
+		const document = await userService.update(req.params.id, req.body);
 		if (!document) {
 			return next(new ApiError(404, "Book not found"));
 		}
@@ -75,8 +75,8 @@ exports.update = async (req, res, next) => {
 }
 exports.delete =async (req, res, next) => {
 	try {
-		const libraryService = new LibraryService(MongoDB.client) ;
-		const document = await libraryService.delete(req.params.id);
+		const userService = new UserService(MongoDB.client) ;
+		const document = await userService.delete(req.params.id);
 		if (!document) {
 			return next (new ApiError(404, "Book not found"));
 		}
@@ -93,8 +93,8 @@ exports.delete =async (req, res, next) => {
 
 exports.deleteAll = async (_req, res, next) => {
 	try{
-		const libraryService = new LibraryService(MongoDB.client);
-		const deletedCount = await libraryService.deleteAll();
+		const userService = new UserService(MongoDB.client);
+		const deletedCount = await userService.deleteAll();
 		return res.send({
 			message: `${deletedCount} books were deleted successfully`,
 		});
@@ -107,8 +107,8 @@ exports.deleteAll = async (_req, res, next) => {
 
 exports.findAllFavorite = async (_req, res, next) => {
 	try {
-		const libraryService = new LibraryService(MongoDB. client);
-		const documents = await libraryService.findFavorite();
+		const userService = new UserService(MongoDB. client);
+		const documents = await userService.findFavorite();
 		return res.send(documents) ;
 	}catch(error) {
 		return next(
