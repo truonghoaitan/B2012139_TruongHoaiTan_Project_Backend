@@ -1,4 +1,4 @@
-const config = {
+const config = { sdsdf
 	app: {
 		port: process.env.PORT || 3000,
 	},
