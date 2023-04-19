@@ -1,4 +1,4 @@
-class ApiError extends Error { dsadf
+class ApiError extends Error {
 		constructor(statusCode, message) {
 			super();
 			this.statusCode = statusCode;
